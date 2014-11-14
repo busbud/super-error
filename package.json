@@ -1,0 +1,25 @@
+{
+  "name": "super-error",
+  "version": "0.1.0",
+  "description": "Easily subclass errors",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/busbud/super-error"
+  },
+  "keywords": [
+    "error",
+    "class",
+    "subclass",
+    "inheritance"
+  ],
+  "author": "Busbud",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/busbud/super-error/issues"
+  },
+  "homepage": "https://github.com/busbud/super-error"
+}

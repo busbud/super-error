@@ -1,5 +1,4 @@
-var util   = require('util');
-var assert = require('assert');
+var util = require('util');
 
 function SuperError(message) {
   if (!(this instanceof Error)) {

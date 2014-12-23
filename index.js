@@ -5,14 +5,20 @@ function SuperError(message, properties) {
     throw new TypeError('SuperError called without new');
   }
 
+  this.name = this.constructor._name || this.constructor.name;
+
   Error.captureStackTrace(this, this.constructor);
 
-  this.name = this.constructor._name || this.constructor.name;
-  this.message = message;
+  if (typeof message === 'string') {
+    this.message = message;
+  } else if (typeof message === 'object' && properties === undefined) {
+    properties = message;
+  }
 
-  if (typeof properties !== 'object') return;
-  for (var prop in properties) {
-    if (properties.hasOwnProperty(prop)) this[prop] = properties[prop];
+  if (typeof properties === 'object') {
+    for (var prop in properties) {
+      if (properties.hasOwnProperty(prop)) this[prop] = properties[prop];
+    }
   }
 }
 util.inherits(SuperError, Error);

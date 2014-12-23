@@ -41,7 +41,7 @@ var err = new MySpecificError('my message', {code: 404});
 var err = new MySpecificError({message: 'my message', code: 404});
 
 err.message; //=> 'my message'
-err.code; //=> 404
+err.code;    //=> 404
 ```
 
 ## Custom Constructors

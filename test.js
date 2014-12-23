@@ -108,4 +108,16 @@ err = new SuperError('effect');
 
 assert.equal(err.causedBy(cause), err);
 assert.equal(err.cause, cause);
+assert.equal(err.rootCause, cause);
 assert(/Cause:/.test(err.stack));
+
+// SuperError#causedBy(SuperError#causedBy)
+
+cause = new Error('cause');
+intermediate = new SuperError('intermediate').causedBy(cause);
+err = new SuperError('effect').causedBy(intermediate);
+
+assert.equal(intermediate.cause, cause);
+assert.equal(intermediate.rootCause, cause);
+assert.equal(err.cause, intermediate);
+assert.equal(err.rootCause, cause);

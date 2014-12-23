@@ -121,3 +121,21 @@ Cause: SyntaxError: Unexpected end of input
     at startup (node.js:119:16)
     at node.js:906:3
 ```
+
+In a chain of nested wrapped errors, the original unwrapped cause can be
+accessed through the `rootCause` property of each SuperError instance in
+the chain.
+
+```javascript
+var SuperError = require('super-error');
+
+var WrappedError = SuperError.subclass('WrappedError');
+var TopError = SuperError.subclass('TopError');
+
+var cause = new Error('cause');
+var wrapped = new WrappedError('wrapped').causedBy(cause);
+var top = new TopError('top').causedBy(wrapped);
+
+top.cause.message;     //=> 'wrapped'
+top.rootCause.message; //=> 'cause'
+```

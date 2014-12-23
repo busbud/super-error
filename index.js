@@ -1,6 +1,6 @@
 var util = require('util');
 
-function SuperError(message) {
+function SuperError(message, properties) {
   if (!(this instanceof Error)) {
     throw new TypeError('SuperError called without new');
   }
@@ -9,6 +9,11 @@ function SuperError(message) {
 
   this.name = this.constructor._name || this.constructor.name;
   this.message = message;
+
+  if (typeof properties !== 'object') return;
+  for (var prop in properties) {
+    if (properties.hasOwnProperty(prop)) this[prop] = properties[prop];
+  }
 }
 util.inherits(SuperError, Error);
 

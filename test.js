@@ -17,6 +17,15 @@ assert.equal(typeof err.stack, 'string');
 assert.equal(err.name, 'SuperError');
 assert.equal(err.message, 'message');
 
+err = new SuperError('message', {
+  one: 1,
+  two: 2
+});
+assert(err instanceof SuperError);
+assert.equal(err.message, 'message');
+assert.equal(err.one, 1);
+assert.equal(err.two, 2);
+
 // SuperError.subclass
 
 assert.throws(function() {

@@ -96,3 +96,16 @@ assert(err instanceof ChildError);
 assert.equal(err.message, 'message');
 assert.equal(err.parent_test, 'test');
 assert.equal(err.child_test, 'test');
+
+// SuperError#causedBy
+
+assert.throws(function() {
+  new SuperError().causedBy('string');
+}, TypeError);
+
+var cause = new Error('cause');
+err = new SuperError('effect');
+
+assert.equal(err.causedBy(cause), err);
+assert.equal(err.cause, cause);
+assert(/Cause:/.test(err.stack));

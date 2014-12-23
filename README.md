@@ -32,6 +32,18 @@ err instanceof Error;           //=> true
 throw err;
 ```
 
+The default SuperError constructor also accepts a plain object of
+properties to assign on the error.
+
+```javascript
+var err = new MySpecificError('my message', {code: 404});
+// Or, equivalently:
+var err = new MySpecificError({message: 'my message', code: 404});
+
+err.message; //=> 'my message'
+err.code; //=> 404
+```
+
 ## Custom Constructors
 
 A custom constructor can be passed to `subclass`, which will be called

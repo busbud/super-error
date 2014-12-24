@@ -98,7 +98,8 @@ try {
 ```
 
 The cause is saved on the `cause` property of the SuperError instance,
-and the stack traces are concatenated.
+and the stack traces are concatenated. The original stack trace can be
+accessed through the `ownStack` property.
 
 ```
 MyParseError: failed to parse

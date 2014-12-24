@@ -64,6 +64,8 @@ SuperError.prototype.causedBy = function(cause) {
   } else {
     this.rootCause = cause;
   }
+
+  this.ownStack = this.stack;
   this.stack += '\nCause: ' + cause.stack;
 
   return this;

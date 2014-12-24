@@ -110,6 +110,8 @@ assert.equal(err.causedBy(cause), err);
 assert.equal(err.cause, cause);
 assert.equal(err.rootCause, cause);
 assert(/Cause:/.test(err.stack));
+assert.equal(typeof err.ownStack, 'string');
+assert(!/Cause:/.test(err.ownStack))
 
 // SuperError#causedBy(SuperError#causedBy)
 

@@ -86,3 +86,69 @@ var MySpecificError = MyError.subclass(exports, 'MySpecificError');
 exports.MyError === MyError;                 //=> true
 exports.MySpecificError === MySpecificError; //=> true
 ```
+
+## Error Causes
+
+SuperError instances can wrap other Error or SuperError instances as
+their `cause`.  This allows for higher-level error matching and handling
+at the top of a call stack without losing any information about the
+original specific cause.
+
+Causes are set using `causedBy` on a SuperError instance. The instance
+is returned from the method for ease of use with `throw` or callbacks.
+
+```javascript
+var SuperError = require('super-error');
+
+var MyParseError = SuperError.subclass('MyParseError');
+
+try {
+  var obj = JSON.parse('"foo');
+} catch (e) {
+  throw new MyParseError('failed to parse').causedBy(e);
+}
+```
+
+The cause is saved on the `cause` property of the SuperError instance,
+and the stack traces are concatenated. The original stack trace can be
+accessed through the `ownStack` property.
+
+```
+MyParseError: failed to parse
+    at Object.<anonymous> (example.js:8:9)
+    at Module._compile (module.js:456:26)
+    at Object.Module._extensions..js (module.js:474:10)
+    at Module.load (module.js:356:32)
+    at Function.Module._load (module.js:312:12)
+    at Function.Module.runMain (module.js:497:10)
+    at startup (node.js:119:16)
+    at node.js:906:3
+Cause: SyntaxError: Unexpected end of input
+    at Object.parse (native)
+    at Object.<anonymous> (example.js:6:18)
+    at Module._compile (module.js:456:26)
+    at Object.Module._extensions..js (module.js:474:10)
+    at Module.load (module.js:356:32)
+    at Function.Module._load (module.js:312:12)
+    at Function.Module.runMain (module.js:497:10)
+    at startup (node.js:119:16)
+    at node.js:906:3
+```
+
+In a chain of nested wrapped errors, the original unwrapped cause can be
+accessed through the `rootCause` property of each SuperError instance in
+the chain.
+
+```javascript
+var SuperError = require('super-error');
+
+var WrappedError = SuperError.subclass('WrappedError');
+var TopError = SuperError.subclass('TopError');
+
+var cause = new Error('cause');
+var wrapped = new WrappedError('wrapped').causedBy(cause);
+var top = new TopError('top').causedBy(wrapped);
+
+top.cause.message;     //=> 'wrapped'
+top.rootCause.message; //=> 'cause'
+```

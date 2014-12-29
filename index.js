@@ -64,4 +64,22 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
   return constructor;
 };
 
+SuperError.prototype.causedBy = function(cause) {
+  if (!(cause instanceof Error)) {
+    throw new TypeError('causedBy called without Error instance');
+  }
+
+  this.cause = cause;
+  if (cause.rootCause instanceof Error) {
+    this.rootCause = cause.rootCause;
+  } else {
+    this.rootCause = cause;
+  }
+
+  this.ownStack = this.stack;
+  this.stack += '\nCause: ' + cause.stack;
+
+  return this;
+};
+
 module.exports = SuperError;

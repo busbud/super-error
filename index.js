@@ -7,7 +7,9 @@ function SuperError(message, properties) {
 
   this.name = this.constructor._name || this.constructor.name;
 
-  Error.captureStackTrace(this, this.constructor);
+  if (typeof Error.captureStackTrace === 'function') {
+    Error.captureStackTrace(this, this.constructor);
+  }
 
   if (typeof message === 'string') {
     this.message = message;

@@ -5,8 +5,6 @@ function SuperError(message, properties) {
     throw new TypeError('SuperError called without new');
   }
 
-  this.name = this.constructor._name || this.constructor.name;
-
   if (typeof Error.captureStackTrace === 'function') {
     Error.captureStackTrace(this, this.constructor);
   }
@@ -24,6 +22,7 @@ function SuperError(message, properties) {
   }
 }
 util.inherits(SuperError, Error);
+SuperError.prototype.name = 'SuperError';
 
 SuperError.subclass = function(exports, name, subclass_constructor) {
   if (typeof name === 'function') {
@@ -55,9 +54,10 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
   };
 
   constructor._name = name;
+  constructor.subclass = super_constructor.subclass;
 
   util.inherits(constructor, super_constructor);
-  constructor.subclass = super_constructor.subclass;
+  constructor.prototype.name = name;
 
   if (exports) {
     exports[name] = constructor;

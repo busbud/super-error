@@ -97,12 +97,28 @@ err = new ExportedComplexError(42, 'message');
 assert.equal(err.code, 42);
 assert.equal(err.message, '42message');
 
+var ObjectError = SuperError.subclass(
+  'ObjectError',
+  function(object) {
+    this.code = object.statusCode;
+    this.message = object.statusText;
+  }
+);
+
+err = new ObjectError({ statusCode: 418, statusText: 'I\'m a teapot' });
+assert.equal(err.code, 418);
+assert.equal(err.message, 'I\'m a teapot');
+assert.equal(err.statusCode, undefined, 'Should not have side effects from original constructor');
+assert.equal(err.statusText, undefined, 'Should not have side effects from original constructor');
+
 // SuperError.subclass(...).subclass
 
 var ParentError = SuperError.subclass('ParentError', function() {
+  SuperError.apply(this, arguments);
   this.parent_test = 'test';
 });
 var ChildError = ParentError.subclass('ChildError', function() {
+  ParentError.apply(this, arguments);
   this.child_test = 'test';
 });
 assert.equal(typeof ChildError, 'function');

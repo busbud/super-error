@@ -1,6 +1,6 @@
 var util = require('util');
 
-function SuperError(message, properties) {
+function SpecialConstructor() {
   if (!(this instanceof Error)) {
     throw new TypeError('SuperError called without new');
   }
@@ -8,6 +8,10 @@ function SuperError(message, properties) {
   if (typeof Error.captureStackTrace === 'function') {
     Error.captureStackTrace(this, this.constructor);
   }
+}
+
+function SuperError(message, properties) {
+  SpecialConstructor.call(this);
 
   if (typeof message === 'string') {
     this.message = message;
@@ -47,9 +51,11 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
   var super_constructor = this;
 
   var constructor = function() {
-    super_constructor.apply(this, arguments);
     if (subclass_constructor) {
+      SpecialConstructor.call(this);
       subclass_constructor.apply(this, arguments);
+    } else {
+      super_constructor.apply(this, arguments);
     }
   };
 

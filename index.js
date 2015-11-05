@@ -1,6 +1,6 @@
 var util = require('util');
 
-function SpecialConstructor() {
+function BaseConstructor() {
   if (!(this instanceof Error)) {
     throw new TypeError('SuperError called without new');
   }
@@ -11,7 +11,7 @@ function SpecialConstructor() {
 }
 
 function SuperError(message, properties) {
-  SpecialConstructor.call(this);
+  BaseConstructor.call(this);
 
   if (typeof message === 'string') {
     this.message = message;
@@ -52,7 +52,7 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
 
   var constructor = function() {
     if (subclass_constructor) {
-      SpecialConstructor.call(this);
+      BaseConstructor.call(this);
       subclass_constructor.apply(this, arguments);
     } else {
       super_constructor.apply(this, arguments);

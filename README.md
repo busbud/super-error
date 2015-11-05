@@ -46,8 +46,9 @@ err.code;    //=> 404
 
 ## Custom Constructors
 
-A custom constructor can be passed to `subclass`, which will be called
-after all super-constructors.
+A custom constructor can be passed to `subclass`, which will hide
+all super constructors. If you want to propagate arguments
+to the parent constructor, call it explicitly.
 
 ```javascript
 var SuperError = require('super-error');
@@ -69,6 +70,10 @@ err.code;    //=> 2
 err.message; //=> 'Invalid bar'
 
 throw err;
+
+var MyCustomError = SuperError.subclass('MyCustomError', function(message, properties) {
+  SuperError.call(this, 'Decorated ' + message, properties);
+});
 ```
 
 ## Exporting Error Classes

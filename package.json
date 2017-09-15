@@ -1,6 +1,6 @@
 {
   "name": "super-error",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Easily subclass errors",
   "main": "index.js",
   "scripts": {
@@ -21,5 +21,6 @@
   "bugs": {
     "url": "https://github.com/busbud/super-error/issues"
   },
-  "homepage": "https://github.com/busbud/super-error"
+  "homepage": "https://github.com/busbud/super-error",
+  "types": "./index.d.ts"
 }

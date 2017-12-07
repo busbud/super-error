@@ -59,7 +59,10 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
     }
   };
 
-  constructor._name = name;
+  Object.defineProperty(constructor, 'name', {
+    value: name
+  });
+
   constructor.subclass = super_constructor.subclass;
 
   util.inherits(constructor, super_constructor);

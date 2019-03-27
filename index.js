@@ -59,9 +59,11 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
     }
   };
 
-  Object.defineProperty(constructor, 'name', {
-    value: name
-  });
+  try {
+    Object.defineProperty(constructor, 'name', {
+      value: name
+    });
+  } catch (e) {};
 
   constructor.subclass = super_constructor.subclass;
 

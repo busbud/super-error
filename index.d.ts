@@ -1,14 +1,12 @@
-declare namespace SuperError {
-  interface SuperErrorI {
-    name: string;
-    message: string;
-    [k: string]: any;
-  
-    new(...args: any[]): SuperError;
-  }
+interface SuperErrorI {
+  name: string;
+  message: string;
+  [k: string]: any;
+
+  new(...args: any[]): SuperError;
 }
 
-interface SuperError extends Error {
+declare class SuperError extends Error {
   name: string;
   message: string;
   [k: string]: any;
@@ -22,5 +20,4 @@ interface SuperError extends Error {
   causedBy(err: Error): this;
 }
 
-declare var SuperError: SuperError;
 export = SuperError;

@@ -4,7 +4,10 @@
   "description": "Easily subclass errors",
   "main": "index.js",
   "scripts": {
-    "test": "node test"
+    "test": "yarn lint && yarn mocha",
+    "mocha": "NODE_ENV=test nyc mocha ./test/*.test.js",
+    "lint": "busbud-lint --ignore-deps=@typescript-eslint/eslint-plugin,eslint-*",
+    "lint:fix": "busbud-lint --fix"
   },
   "repository": {
     "type": "git",
@@ -22,5 +25,21 @@
     "url": "https://github.com/busbud/super-error/issues"
   },
   "homepage": "https://github.com/busbud/super-error",
-  "types": "./index.d.ts"
+  "types": "./index.d.ts",
+  "devDependencies": {
+    "busbud-lint": "1.7.0",
+    "chai": "4.2.0",
+    "mocha": "6.2.1",
+    "nyc": "14.1.1"
+  },
+  "nyc": {
+    "instrument": true,
+    "all": true,
+    "include": [
+      "*.js"
+    ],
+    "extension": [
+      ".js"
+    ]
+  }
 }

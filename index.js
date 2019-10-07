@@ -25,6 +25,7 @@ function SuperError(message, properties) {
 
   if (typeof properties === 'object') {
     for (var prop in properties) {
+      /* eslint-disable no-prototype-builtins */
       if (properties.hasOwnProperty(prop)) this[prop] = properties[prop];
     }
   }
@@ -58,7 +59,9 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
     Object.defineProperty(constructor, 'name', {
       value: name
     });
-  } catch (e) {}
+  } catch (e) {
+    // Do nothing.
+  }
 
   constructor.prototype.name = name;
 
@@ -83,12 +86,11 @@ function createConstructor(name, subclass_constructor, super_constructor) {
         throw new TypeError('subclass_constructor does not extend SuperError');
       }
       return subclass_constructor;
-    } else {
-      constructor = function() {
-        BaseConstructor.call(this);
-        subclass_constructor.apply(this, arguments);
-      };
     }
+    constructor = function() {
+      BaseConstructor.call(this);
+      subclass_constructor.apply(this, arguments);
+    };
   } else {
     constructor = function() {
       super_constructor.apply(this, arguments);
@@ -103,7 +105,7 @@ function createConstructor(name, subclass_constructor, super_constructor) {
     constructor.subclass = super_constructor.subclass;
   }
 
-  return constructor
+  return constructor;
 }
 
 SuperError.prototype.causedBy = function(cause) {

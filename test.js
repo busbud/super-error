@@ -47,6 +47,9 @@ assert.throws(function() {
 assert.throws(function() {
   SuperError.subclass({}, 'name', 'constructor');
 }, TypeError);
+assert.throws(function() {
+  SuperError.subclass({}, 'name', class Foo /* does not extend SuperError */ {});
+}, TypeError);
 
 var SimpleError = SuperError.subclass('SimpleError');
 assert.equal(typeof SimpleError, 'function');
@@ -95,6 +98,28 @@ assert.equal(exports.ExportedComplexError, ExportedComplexError);
 
 err = new ExportedComplexError(42, 'message');
 assert.equal(err.code, 42);
+assert.equal(err.message, '42message');
+
+var ClassError = SuperError.subclass('ClassError', class extends SuperError {
+  constructor(code, description) {
+    super();
+    this.code = code;
+    this.description = description;
+  }
+  get message() {
+    return this.code + this.description;
+  }
+});
+assert.equal(typeof ClassError, 'function');
+
+err = new ClassError(42, 'message');
+assert(err instanceof Error);
+assert(err instanceof SuperError);
+assert(err instanceof ClassError);
+assert.equal(typeof err.stack, 'string');
+assert.equal(err.name, 'ClassError');
+assert.equal(err.code, 42);
+assert.equal(err.description, 'message');
 assert.equal(err.message, '42message');
 
 var ObjectError = SuperError.subclass(

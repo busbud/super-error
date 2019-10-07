@@ -76,6 +76,38 @@ var MyCustomError = SuperError.subclass('MyCustomError', function(message, prope
 });
 ```
 
+## Custom ES6 Classes
+
+The custom constructor passed to `subclass` can be an ES6 class,
+which must `extend` (directly or indirectly) `SuperError`.
+
+```javascript
+var SuperError = require('super-error');
+
+var ERROR_CODES = {
+  1: 'Invalid foo',
+  2: 'Invalid bar',
+  3: 'Invalid baz'
+};
+
+var MyES6CodeError = SuperError.subclass('MyES6CodeError', class extends SuperError {
+  constructor(code) {
+    super();
+    this.code = code;
+  }
+  get message() {
+    return ERROR_CODES[this.code];
+  }
+});
+
+var err = new MyES6CodeError(2);
+
+err.code;    //=> 2
+err.message; //=> 'Invalid bar'
+
+throw err;
+```
+
 ## Exporting Error Classes
 
 An `exports` object can be passed to `subclass` in order to

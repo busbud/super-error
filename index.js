@@ -5,8 +5,12 @@ function BaseConstructor() {
     throw new TypeError('SuperError called without new');
   }
 
-  if (typeof Error.captureStackTrace === 'function') {
-    Error.captureStackTrace(this, this.constructor);
+  if (!this.ownStack) {
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, this.constructor);
+    }
+
+    this.ownStack = this.stack;
   }
 }
 
@@ -48,26 +52,14 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
     throw new TypeError('subclass_constructor is not a function');
   }
 
-  var super_constructor = this;
-
-  var constructor = function() {
-    if (subclass_constructor) {
-      BaseConstructor.call(this);
-      subclass_constructor.apply(this, arguments);
-    } else {
-      super_constructor.apply(this, arguments);
-    }
-  };
+  var constructor = createConstructor(name, subclass_constructor, this);
 
   try {
     Object.defineProperty(constructor, 'name', {
       value: name
     });
-  } catch (e) {};
+  } catch (e) {}
 
-  constructor.subclass = super_constructor.subclass;
-
-  util.inherits(constructor, super_constructor);
   constructor.prototype.name = name;
 
   if (exports) {
@@ -76,6 +68,43 @@ SuperError.subclass = function(exports, name, subclass_constructor) {
 
   return constructor;
 };
+
+function createConstructor(name, subclass_constructor, super_constructor) {
+  var constructor;
+  if (subclass_constructor) {
+    /*
+     * ES6 classes can only be constructed with 'new', so using Function.prototype.apply()
+     * fails. They have a non-configurable non-writable 'prototype' property, and it's
+     * possible, but unlikely, for this to be set for regular functions (certainly our
+     * README doesn't advocate doing this, so it's very unlikely to happen for us).
+     */
+    if (!Object.getOwnPropertyDescriptor(subclass_constructor, 'prototype').writable) {
+      if (!(subclass_constructor.prototype instanceof SuperError)) {
+        throw new TypeError('subclass_constructor does not extend SuperError');
+      }
+      return subclass_constructor;
+    } else {
+      constructor = function() {
+        BaseConstructor.call(this);
+        subclass_constructor.apply(this, arguments);
+      };
+    }
+  } else {
+    constructor = function() {
+      super_constructor.apply(this, arguments);
+    };
+  }
+
+  util.inherits(constructor, super_constructor);
+
+  if (typeof Object.setPrototypeOf === 'function') {
+    Object.setPrototypeOf(constructor, super_constructor);
+  } else {
+    constructor.subclass = super_constructor.subclass;
+  }
+
+  return constructor
+}
 
 SuperError.prototype.causedBy = function(cause) {
   if (!(cause instanceof Error)) {
@@ -89,8 +118,7 @@ SuperError.prototype.causedBy = function(cause) {
     this.rootCause = cause;
   }
 
-  this.ownStack = this.stack;
-  this.stack += '\nCause: ' + cause.stack;
+  this.stack = this.ownStack + '\nCause: ' + cause.stack;
 
   return this;
 };

@@ -11,6 +11,8 @@ declare namespace SuperError {
 interface SuperError extends Error {
   name: string;
   message: string;
+  cause?: Error;
+  rootCause?: Error;
   [k: string]: any;
 
   subclass(name: string): SuperError.SuperErrorI;

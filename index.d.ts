@@ -9,7 +9,7 @@ declare namespace SuperError {
 }
 
 declare class SuperError extends Error {
-  constructor(...args: any[])
+  constructor(...args: any[]);
 
   name: string;
   message: string;

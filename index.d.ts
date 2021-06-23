@@ -17,10 +17,10 @@ declare class SuperError extends Error {
   rootCause?: Error;
   [k: string]: any;
 
-  subclass(name: string): SuperError.SuperErrorI;
-  subclass(exports: any, name: string): SuperError.SuperErrorI;
-  subclass(exports: any, name: string, subclass_constructor: (this: SuperError, ...args: any[]) => void): SuperError.SuperErrorI;
-  subclass(name: string, subclass_constructor: (this: SuperError, ...args: any[]) => void): SuperError.SuperErrorI;
+  static subclass(name: string): SuperError.SuperErrorI;
+  static subclass(exports: any, name: string): SuperError.SuperErrorI;
+  static subclass(exports: any, name: string, subclass_constructor: (this: SuperError, ...args: any[]) => void): SuperError.SuperErrorI;
+  static subclass(name: string, subclass_constructor: (this: SuperError, ...args: any[]) => void): SuperError.SuperErrorI;
 
   causedBy(err: Error): this;
 }

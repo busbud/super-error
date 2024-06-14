@@ -28,3 +28,7 @@ node_modules
 .lock-wscript
 .nyc_output
 .eslintcache
+
+#IDE directories
+.idea
+

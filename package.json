@@ -1,6 +1,6 @@
 {
   "name": "super-error",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "Easily subclass errors",
   "main": "index.js",
   "scripts": {

@@ -1,4 +1,4 @@
-var util = require('util');
+const inherits = require('inherits');
 
 function BaseConstructor() {
   if (!(this instanceof Error)) {
@@ -30,7 +30,7 @@ function SuperError(message, properties) {
     }
   }
 }
-util.inherits(SuperError, Error);
+inherits(SuperError, Error);
 SuperError.prototype.name = 'SuperError';
 
 SuperError.subclass = function(exports, name, subclass_constructor) {
@@ -97,7 +97,7 @@ function createConstructor(name, subclass_constructor, super_constructor) {
     };
   }
 
-  util.inherits(constructor, super_constructor);
+  inherits(constructor, super_constructor);
 
   if (typeof Object.setPrototypeOf === 'function') {
     Object.setPrototypeOf(constructor, super_constructor);
